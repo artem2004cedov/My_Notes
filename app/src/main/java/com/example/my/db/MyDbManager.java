@@ -37,6 +37,25 @@ public class MyDbManager {
         db.insert(MyConstants.TABLE_NAME, null, cv);
     }
 
+
+    // удоление
+    public void delete(int id) {
+        // удалить id которое передали
+        String selection = MyConstants._ID + "=" + id;
+        db.delete(MyConstants.TABLE_NAME, selection, null);
+    }
+
+    // редоктирование
+    public void updateItem(String title, String disc, String uri, int id) {
+        // удалить id которое передали
+        String selection = MyConstants._ID + "=" + id;
+        ContentValues cv = new ContentValues();
+        cv.put(MyConstants.TITLE, title);
+        cv.put(MyConstants.DISC, disc);
+        cv.put(MyConstants.URI, uri);
+        db.update(MyConstants.TABLE_NAME, cv, selection, null);
+    }
+
     // метод для считывания
     public List<ListItem> getFromDb(String search_text) {
         List<ListItem> tempList = new ArrayList<>();
@@ -51,9 +70,11 @@ public class MyDbManager {
             String title = cursor.getString(cursor.getColumnIndex(MyConstants.TITLE));
             String disc = cursor.getString(cursor.getColumnIndex(MyConstants.DISC));
             String uri = cursor.getString(cursor.getColumnIndex(MyConstants.URI));
+            int _id = cursor.getInt(cursor.getColumnIndex(MyConstants._ID));
             item.setTitle(title);
             item.setDick(disc);
             item.setUri(uri);
+            item.setId(_id);
             tempList.add(item);
         }
         cursor.close();

@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.my.EditActivity;
 import com.example.my.R;
 import com.example.my.db.MyConstants;
+import com.example.my.db.MyDbManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -78,6 +79,17 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.MyViewHolder> 
         mainArray.clear();
         mainArray.addAll(newList);
         notifyDataSetChanged();
+
+    }
+
+    public void removeItem(int pos, MyDbManager myDbManager) {
+        myDbManager.delete(mainArray.get(pos).getId());
+        // удоляет позицию
+        mainArray.remove(pos);
+        // ствигает илементы
+        notifyItemChanged(0,mainArray.size());
+        // говрим адабптору позицию с которой мы удолили
+        notifyItemRemoved(pos);
 
     }
 }

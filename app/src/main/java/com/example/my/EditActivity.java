@@ -5,12 +5,14 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Toast;
+import android.widget.VideoView;
 
 import com.example.my.MyAdapter.ListItem;
 import com.example.my.db.MyConstants;
@@ -27,6 +29,7 @@ public class EditActivity extends AppCompatActivity {
     private final int POCK_IMAGE_CODE = 123;
     private String tempUri = "empty";
     private boolean isEditState = true;
+    private ListItem item;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +53,8 @@ public class EditActivity extends AppCompatActivity {
         if (resultCode == RESULT_OK && requestCode == POCK_IMAGE_CODE && data != null) {
             tempUri = data.getData().toString();
             imageNow.setImageURI(data.getData());
+
+            getContentResolver().takePersistableUriPermission(data.getData(), Intent.FLAG_GRANT_READ_URI_PERMISSION);
         }
     }
 
@@ -59,6 +64,8 @@ public class EditActivity extends AppCompatActivity {
         edTitle = findViewById(R.id.edTitle);
         imageNow = findViewById(R.id.imageViewNow);
         imageGetContainer = findViewById(R.id.real);
+        edEditButton = findViewById(R.id.emEditButton);
+        edEditDelete = findViewById(R.id.imEditDelete);
         myDbManager = new MyDbManager(this);
 
     }
@@ -66,12 +73,21 @@ public class EditActivity extends AppCompatActivity {
     private void getMyIntent() {
         Intent intent = getIntent();
         if (intent != null) {
-            ListItem item = (ListItem) intent.getSerializableExtra(MyConstants.LIST_ITEM_INTENT);
+            item = (ListItem) intent.getSerializableExtra(MyConstants.LIST_ITEM_INTENT);
             isEditState = intent.getBooleanExtra(MyConstants.EDIT_STATE, true);
 
             if (!isEditState) {
                 edTitle.setText(item.getTitle());
                 edDisc.setText(item.getDick());
+
+                if (!item.getUri().equals("empty")) {
+                    tempUri = item.getUri();
+                    imageGetContainer.setVisibility(View.VISIBLE);
+                    imageNow.setImageURI(Uri.parse(item.getUri()));
+
+//                    edEditButton.setVisibility(View.GONE);
+//                    edEditDelete.setVisibility(View.GONE);
+                }
             }
         }
     }
@@ -82,10 +98,17 @@ public class EditActivity extends AppCompatActivity {
         if (title.equals("") || disc.equals("")) {
             Toast.makeText(this, R.string.text_empty, Toast.LENGTH_SHORT).show();
         } else {
-            myDbManager.insertToDb(title, disc, tempUri);
-            Toast.makeText(this, R.string.saved, Toast.LENGTH_SHORT).show();
-            finish();
+            if (isEditState) {
+
+                myDbManager.insertToDb(title, disc, tempUri);
+                Toast.makeText(this, R.string.saved, Toast.LENGTH_SHORT).show();
+
+            } else {
+                myDbManager.updateItem(title, disc, tempUri,item.getId());
+                Toast.makeText(this, R.string.saved, Toast.LENGTH_SHORT).show();
+            }
             myDbManager.closeDb();
+            finish();
         }
     }
 
@@ -106,7 +129,7 @@ public class EditActivity extends AppCompatActivity {
     }
 
     public void onClickChooseImage(View view) {
-        Intent choose = new Intent(Intent.ACTION_PICK);
+        Intent choose = new Intent(Intent.ACTION_OPEN_DOCUMENT);
         choose.setType("image/*");
         startActivityForResult(choose, POCK_IMAGE_CODE);
     }
