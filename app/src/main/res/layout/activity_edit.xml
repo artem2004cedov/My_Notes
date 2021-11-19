@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#00ACC1"
+    android:background="#1B1A1A"
     android:orientation="vertical"
     android:padding="8dp"
     tools:context=".EditActivity">
@@ -60,6 +60,7 @@
         android:textColor="@color/black"
         android:background="@android:drawable/editbox_background"
         android:hint="title"
+        android:textColorHint="#B1B1B1"
         android:gravity="start"
         android:padding="10dp"
         tools:ignore="MissingConstraints" />
@@ -70,6 +71,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/real"
+        android:textColorHint="#B1B1B1"
         android:layout_marginTop="54dp"
         android:textColor="@color/black"
         android:background="@android:drawable/editbox_background"

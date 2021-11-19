@@ -15,6 +15,7 @@ import android.widget.Toast;
 import android.widget.VideoView;
 
 import com.example.my.MyAdapter.ListItem;
+import com.example.my.db.AppEcoter;
 import com.example.my.db.MyConstants;
 import com.example.my.db.MyDbManager;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -85,26 +86,31 @@ public class EditActivity extends AppCompatActivity {
                     imageGetContainer.setVisibility(View.VISIBLE);
                     imageNow.setImageURI(Uri.parse(item.getUri()));
 
-//                    edEditButton.setVisibility(View.GONE);
-//                    edEditDelete.setVisibility(View.GONE);
+                    edEditButton.setVisibility(View.GONE);
+                    edEditDelete.setVisibility(View.GONE);
                 }
             }
         }
     }
 
     public void onClickSave(View view) {
-        String title = edTitle.getText().toString();
-        String disc = edDisc.getText().toString();
+        final String title = edTitle.getText().toString();
+        final String disc = edDisc.getText().toString();
         if (title.equals("") || disc.equals("")) {
             Toast.makeText(this, R.string.text_empty, Toast.LENGTH_SHORT).show();
         } else {
             if (isEditState) {
 
-                myDbManager.insertToDb(title, disc, tempUri);
+                AppEcoter.getInstance().getSunIo().execute(new Runnable() {
+                    @Override
+                    public void run() {
+                        myDbManager.insertToDb(title, disc, tempUri);
+                    }
+                });
                 Toast.makeText(this, R.string.saved, Toast.LENGTH_SHORT).show();
 
             } else {
-                myDbManager.updateItem(title, disc, tempUri,item.getId());
+                myDbManager.updateItem(title, disc, tempUri, item.getId());
                 Toast.makeText(this, R.string.saved, Toast.LENGTH_SHORT).show();
             }
             myDbManager.closeDb();

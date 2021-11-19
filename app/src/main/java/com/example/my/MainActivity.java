@@ -21,15 +21,21 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.my.MyAdapter.ListItem;
 import com.example.my.MyAdapter.MainAdapter;
 import com.example.my.R;
+import com.example.my.db.AppEcoter;
 import com.example.my.db.MyDbManager;
+import com.example.my.db.OnDataResived;
 
-public class MainActivity extends AppCompatActivity {
+import java.util.List;
+
+public class MainActivity extends AppCompatActivity implements OnDataResived {
     private MyDbManager myDbManager;
     private EditText edTitle, edDisc;
     private RecyclerView recyclerView;
     private MainAdapter mainAdapter;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,10 +63,9 @@ public class MainActivity extends AppCompatActivity {
 
             // по ведению буквы
             @Override
-            public boolean onQueryTextChange(String newText) {
+            public boolean onQueryTextChange(final String newText) {
                 // поиск по буквам
-                mainAdapter.updateAdapter(myDbManager.getFromDb(newText));
-
+                readFromDb(newText);
                 return false;
             }
         });
@@ -85,7 +90,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         myDbManager.openDb();
-        mainAdapter.updateAdapter(myDbManager.getFromDb(""));
+        readFromDb("");
     }
 
     // переход в другой класс
@@ -120,5 +125,24 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    private void readFromDb(final String text) {
+        // поиск по буквам
+        AppEcoter.getInstance().getSunIo().execute(new Runnable() {
+            @Override
+            public void run() {
+                myDbManager.getFromDb(text, MainActivity.this);
+            }
+        });
+    }
 
+
+    @Override
+    public void onReceived(List<ListItem> list) {
+        AppEcoter.getInstance().getMainIo().execute(new Runnable() {
+            @Override
+            public void run() {
+                mainAdapter.updateAdapter(list);
+            }
+        });
+    }
 }

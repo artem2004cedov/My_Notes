@@ -57,7 +57,7 @@ public class MyDbManager {
     }
 
     // метод для считывания
-    public List<ListItem> getFromDb(String search_text) {
+    public void getFromDb(String search_text, OnDataResived onDataResived) {
         List<ListItem> tempList = new ArrayList<>();
         String selection = MyConstants.TITLE + " like ?";
         // поиск
@@ -78,7 +78,8 @@ public class MyDbManager {
             tempList.add(item);
         }
         cursor.close();
-        return tempList;
+        onDataResived.onReceived(tempList);
+
     }
 
     // закрываем базу даных
