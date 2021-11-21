@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#1B1A1A"
+    android:background="@color/main_color"
     android:orientation="vertical"
     android:padding="8dp"
     tools:context=".EditActivity">
@@ -57,10 +57,10 @@
         android:layout_width="match_parent"
         android:layout_height="48dp"
         android:layout_below="@id/real"
-        android:textColor="@color/black"
-        android:background="@android:drawable/editbox_background"
+        android:textColor="@color/white"
         android:hint="title"
-        android:textColorHint="#B1B1B1"
+        android:background="@drawable/custom_imput"
+        android:textColorHint="#FDFCFC"
         android:gravity="start"
         android:padding="10dp"
         tools:ignore="MissingConstraints" />
@@ -71,10 +71,10 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/real"
-        android:textColorHint="#B1B1B1"
+        android:textColorHint="#FAF8F8"
         android:layout_marginTop="54dp"
-        android:textColor="@color/black"
-        android:background="@android:drawable/editbox_background"
+        android:background="@drawable/custom_im"
+        android:textColor="@color/white"
         android:hint="description"
         android:inputType="textMultiLine"
         android:padding="8dp"
@@ -88,9 +88,10 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="290dp"
         android:layout_marginTop="640dp"
-        android:backgroundTint="@color/purple_200"
+        android:backgroundTint="#A19F9F"
         android:onClick="onClickSave"
-        app:srcCompat="@android:drawable/ic_menu_save"
+        android:alpha="0.7"
+        android:src="@drawable/save_24"
         tools:ignore="MissingConstraints,OnClick" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -100,7 +101,7 @@
         android:layout_marginStart="290dp"
         android:layout_marginTop="560dp"
         android:alpha="0.7"
-        android:backgroundTint="#F44336"
+        android:backgroundTint="@color/main_color"
         android:onClick="onClickAddImage"
         app:srcCompat="@drawable/image_24"
         tools:ignore="MissingConstraints,OnClick" />

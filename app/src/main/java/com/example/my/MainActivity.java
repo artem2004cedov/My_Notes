@@ -1,6 +1,7 @@
 package com.example.my;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -8,10 +9,14 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.graphics.Color;
 import android.graphics.Typeface;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.text.Editable;
+import android.text.Html;
 import android.text.TextWatcher;
 import android.view.Gravity;
 import android.view.Menu;
@@ -35,17 +40,17 @@ public class MainActivity extends AppCompatActivity implements OnDataResived {
     private EditText edTitle, edDisc;
     private RecyclerView recyclerView;
     private MainAdapter mainAdapter;
+    private long backPressedTime;
+    private Toast backToast;
 
 
+    @SuppressLint("ResourceAsColor")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         init();
 
-
-//       app:cardElevation="10dp" сглажевает углы
-//       app:cardCornerRadius="10dp" сглажевает углы
     }
 
     // вызывается меню
@@ -82,6 +87,8 @@ public class MainActivity extends AppCompatActivity implements OnDataResived {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(mainAdapter);
         getItemTouchHelper().attachToRecyclerView(recyclerView);
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setBackgroundDrawable(new ColorDrawable(Color.DKGRAY));
 
     }
 
@@ -144,5 +151,18 @@ public class MainActivity extends AppCompatActivity implements OnDataResived {
                 mainAdapter.updateAdapter(list);
             }
         });
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (backPressedTime + 2000 > System.currentTimeMillis()) {
+            backToast.cancel();
+            super.onBackPressed();
+            return;
+        } else {
+            backToast = Toast.makeText(getBaseContext(), "нажмите ещё рас чтобы выйти ", Toast.LENGTH_SHORT);
+            backToast.show();
+        }
+        backPressedTime = System.currentTimeMillis();
     }
 }

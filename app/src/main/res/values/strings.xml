@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">My</string>
+    <string name="app_name">My notes</string>
     <string name="text_empty">заговловок или садержание пусты</string>
     <string name="saved">Сохронено</string>
 </resources>
